@@ -14,6 +14,16 @@ pub fn build(b: *std.build.Builder) void {
     const exe = b.addExecutable("zig_sqlite", "src/main.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
+
+    exe.linkLibC();
+    //sqlite3 riyaz
+    exe.addIncludeDir("src/sqlite3/");
+    exe.addCSourceFile("src/sqlite3/amalgamation/sqlite3.c", &[_][]const u8 {
+    // any compile-time flags that you might want to add
+    // see: https://www.sqlite.org/compile.html
+    });
+    exe.addPackagePath("sqlite3.zig", "src/sqlite3/lib/sqlite3.zig");
+
     exe.install();
 
     const run_cmd = exe.run();
